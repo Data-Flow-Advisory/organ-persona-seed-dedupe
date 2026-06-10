@@ -1,0 +1,16 @@
+{
+  "state": {
+    "mode": "keywords",
+    "candidates": [
+      {
+        "number": 905,
+        "title": "WIP: signup lead capture rework",
+        "state": "open",
+        "merged": false,
+        "url": "https://github.com/jdogweb/discovery-engine/pull/905",
+        "body": "In-flight fix for the signup lead-capture gap.",
+        "updated_at": "2026-06-03T11:30:00Z"
+      }
+    ]
+  }
+}

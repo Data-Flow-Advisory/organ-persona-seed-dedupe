@@ -1,0 +1,16 @@
+{
+  "state": {
+    "mode": "keywords",
+    "candidates": [
+      {
+        "number": 884,
+        "title": "Fix signup lead capture pipeline",
+        "state": "closed",
+        "merged": true,
+        "url": "https://github.com/jdogweb/discovery-engine/pull/884",
+        "body": "Closes the signup lead-capture gap.",
+        "updated_at": "2026-06-03T10:00:00Z"
+      }
+    ]
+  }
+}

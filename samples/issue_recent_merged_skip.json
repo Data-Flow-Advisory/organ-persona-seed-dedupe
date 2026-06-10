@@ -1,0 +1,19 @@
+{
+  "state": {
+    "mode": "issue",
+    "issue_number": 484,
+    "window_hours": 8,
+    "now": "2026-06-03T12:00:00Z",
+    "candidates": [
+      {
+        "number": 1180,
+        "title": "Address issue #484 across repos",
+        "state": "closed",
+        "merged": true,
+        "url": "https://github.com/jdogweb/discovery-engine/pull/1180",
+        "body": "Closes #484 — duplicate cross-repo seed race.",
+        "updated_at": "2026-06-03T10:11:12Z"
+      }
+    ]
+  }
+}

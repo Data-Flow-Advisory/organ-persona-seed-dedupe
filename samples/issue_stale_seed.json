@@ -1,0 +1,19 @@
+{
+  "state": {
+    "mode": "issue",
+    "issue_number": 484,
+    "window_hours": 8,
+    "now": "2026-06-03T12:00:00Z",
+    "candidates": [
+      {
+        "number": 1009,
+        "title": "Earlier attempt at issue #484",
+        "state": "open",
+        "merged": false,
+        "url": "https://github.com/jdogweb/discovery-engine/pull/1009",
+        "body": "Refs #484 but stalled long ago.",
+        "updated_at": "2026-06-01T09:00:00Z"
+      }
+    ]
+  }
+}
