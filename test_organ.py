@@ -299,5 +299,66 @@ class TestSamples:
             )
 
 
+class TestSamplesConform:
+    """Pin each committed sample to its EXACT expected verdict.
+
+    ``TestSamples.test_samples_decide`` only checks the verdict is in the
+    valid set (shape). That lets a behaviour-changing edit flip a sample's
+    verdict (e.g. skip_duplicate -> seed) without CI noticing — the
+    conformance Action shadow-runs the samples but only reports, it never
+    asserts. This class is the assertion: a verdict flip on any committed
+    sample turns the suite red.
+    """
+
+    # filename -> (expected verdict, expected matched PR number or None)
+    _EXPECTED = {
+        "issue_recent_merged_skip.json": ("skip_duplicate", 1180),
+        "issue_stale_seed.json": ("seed", None),
+        "keyword_empty_seed.json": ("seed", None),
+        "keyword_merged_skip.json": ("skip_duplicate", 884),
+        "keyword_open_downgrade.json": ("downgrade_to_verification", 905),
+    }
+
+    def _load(self, name):
+        import json
+        import os
+
+        here = os.path.dirname(__file__)
+        with open(os.path.join(here, "samples", name)) as fh:
+            return json.load(fh)
+
+    def test_every_committed_sample_is_pinned(self):
+        """Guard against an unpinned sample being added but never asserted."""
+        import glob
+        import os
+
+        here = os.path.dirname(__file__)
+        on_disk = {
+            os.path.basename(p)
+            for p in glob.glob(os.path.join(here, "samples", "*.json"))
+        }
+        assert on_disk == set(self._EXPECTED), (
+            "samples/ and _EXPECTED disagree — pin every sample to a verdict: "
+            f"on disk={sorted(on_disk)} pinned={sorted(self._EXPECTED)}"
+        )
+
+    @pytest.mark.parametrize("name", sorted(_EXPECTED))
+    def test_sample_verdict_pinned(self, name):
+        expected_verdict, expected_number = self._EXPECTED[name]
+        payload = self._load(name)
+        result = decide(payload["state"], payload.get("context"))
+        assert result["output"]["verdict"] == expected_verdict, (
+            f"{name}: expected {expected_verdict}, "
+            f"got {result['output']['verdict']}"
+        )
+        match = result["output"]["match"]
+        if expected_number is None:
+            assert match is None, f"{name}: expected no match, got {match}"
+        else:
+            assert match is not None and match["number"] == expected_number, (
+                f"{name}: expected matched PR #{expected_number}, got {match}"
+            )
+
+
 if __name__ == "__main__":
     raise SystemExit(pytest.main([__file__, "-v"]))
