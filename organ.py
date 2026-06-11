@@ -145,13 +145,38 @@ def _verdict_for(match):
 def decide(state: dict, context: dict | None = None) -> dict:
     """Decide whether a persona seed is a duplicate of an existing PR.
 
+    Thin public wrapper over :func:`_decide_core` that additionally surfaces the
+    decision through the single typed port declared in ``ports.json``. The core
+    writes the flat ``verdict`` / ``match`` keys (kept for back-compat with the
+    organ's existing samples + tests); this wrapper additively folds them into one
+    ``seed_dedupe_verdict`` object so a composer can wire the verdict on a single
+    ``SeedDedupeVerdict``-typed edge. The decision itself is unchanged.
+
     Args:
         state: see module docstring.
         context: unused; present for orchestrator compatibility.
 
     Returns:
-        {"output": {verdict, match}, "rationale": "...", "self_metric": {...}}
+        {"output": {verdict, match, seed_dedupe_verdict}, "rationale": "...",
+         "self_metric": {...}}
     """
+    result = _decide_core(state, context)
+    try:
+        out = result["output"]
+        if isinstance(out, dict):
+            out.setdefault(
+                "seed_dedupe_verdict",
+                {"verdict": out.get("verdict"), "match": out.get("match")},
+            )
+    except Exception:
+        # Never let the port-surfacing wrapper break a decision — fail open to the
+        # core result unchanged.
+        pass
+    return result
+
+
+def _decide_core(state: dict, context: dict | None = None) -> dict:
+    """The pure seed-dedupe decision. See :func:`decide` / the module docstring."""
     context = context or {}
 
     try:

@@ -1,0 +1,9 @@
+{
+  "_README": "The typed studs for organ-persona-seed-dedupe (the Lego coupling — see CONNECTORS.md). `inputs[].name` is the literal key decide() reads under `state`; `outputs[].name` is the literal key decide() writes under `output`. `type` names a connection type from the shared vocabulary (types.json). Only the genuine composition wires are declared as ports. The organ also reads control/knob state keys — `mode` (a keywords|issue dispatch discriminator), `issue_number` (the issue-mode anchor scalar), `window_hours` (a recency tuning knob) and `now` (a clock value) — but none of those is a data wire produced by another organ, so they are intentionally NOT declared as ports (declaring control/knobs as studs pollutes the type graph). The composable input is the pre-fetched PR `candidates`; the composable output is the single wrapped `seed_dedupe_verdict` object (the organ also writes the flat `verdict`/`match` keys for back-compat with its existing samples/tests, but those are the verdict's own fields, surfaced through the one typed verdict port). Two referenced types (PullRequestList, SeedDedupeVerdict) are proposed additions to the vocabulary (marked `proposed` in types.json) pending upstream review; PullRequestList is reused verbatim from the organ-ae-pr-queue / organ-merge-adapter retrofits so a single GitHub-fetch IO organ can feed all three.",
+  "inputs": [
+    {"name": "candidates", "type": "PullRequestList", "required": false}
+  ],
+  "outputs": [
+    {"name": "seed_dedupe_verdict", "type": "SeedDedupeVerdict"}
+  ]
+}
